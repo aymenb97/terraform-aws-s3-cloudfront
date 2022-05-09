@@ -1,7 +1,7 @@
 ###################################
 # CloudFront Distribution
 ###################################
-resource "aws_cloudfront_distribution" "bucket_distribution" {
+resource "aws_cloudfront_distribution" "web_distribution" {
   origin {
     domain_name = aws_s3_bucket.bucket.bucket_regional_domain_name
     origin_id   = aws_s3_bucket.bucket.id
@@ -11,7 +11,7 @@ resource "aws_cloudfront_distribution" "bucket_distribution" {
   }
 
   enabled             = true
-  default_root_object = "index.html"
+  default_root_object = var.index_document_suffix
   default_cache_behavior {
     allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods         = ["GET", "HEAD"]

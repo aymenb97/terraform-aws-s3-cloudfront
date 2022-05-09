@@ -1,5 +1,5 @@
 variable "use_for_website" {
-  description = "Specify either the website is used for a static website hosting or for files"
+  description = "Specify either the bucket is used for a static website hosting or for files"
   type        = bool
   default     = false
 }
@@ -32,4 +32,7 @@ variable "max_ttl" {
 variable "default_ttl" {
   description = "Default TTL Value (in seconds)"
   default     = 5 * 60
+}
+variable "path_to_files" {
+  description = "Path to files to upload to the buckets"
 }

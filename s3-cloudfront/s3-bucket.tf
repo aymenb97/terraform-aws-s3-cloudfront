@@ -7,6 +7,10 @@ terraform {
       source  = "hashicorp/random"
       version = "~> 3.1.0"
     }
+    archive = {
+      source  = "hashicorp/archive"
+      version = "~> 2.2.0"
+    }
   }
 }
 
@@ -27,15 +31,15 @@ resource "aws_s3_bucket_policy" "_" {
   policy = data.aws_iam_policy_document.bucket_policy_doc.json
 }
 
-resource "aws_s3_bucket_website_configuration" "website_config" {
-  count  = var.use_for_website ? 1 : 0
-  bucket = aws_s3_bucket.bucket
-  index_document {
-    suffix = var.index_document_suffix
-  }
-  error_document {
-    key = "error.html"
-  }
+
+
+resource "aws_s3_object" "static_website_files" {
+  for_each     = fileset(var.path_to_files, "*")
+  bucket       = aws_s3_bucket.bucket.id
+  key          = each.value
+  content_type = "text/html"
+  source       = "${var.path_to_files}/${each.value}"
+  etag         = filemd5("${var.path_to_files}/${each.value}")
 }
 
 data "aws_iam_policy_document" "bucket_policy_doc" {
